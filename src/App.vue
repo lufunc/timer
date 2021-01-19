@@ -1,26 +1,53 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="bg">
+    <div class="timer" @click="ttt">
+      timer{{h+m+s}}
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { reactive, toRefs } from 'vue'
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  setup(){
+    const data = reactive({
+      // clock content
+      h: 0,
+      m: 0,
+      s: 0,
+      // setting
+      hourFormat: 0, // 12h 24h 024h
+      scale: 1,
+      brightness: 1,
+      showBg: true,
+      showSecond: true
+    })
+    const ttt =()=>{
+      console.log('ttt')
+    }
+    return {
+      ...toRefs(data),
+      ttt
+    }
   }
 }
 </script>
 
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body{
+  margin: 0;
+}
+ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.bg{
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
 }
 </style>
