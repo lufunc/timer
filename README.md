@@ -1,8 +1,8 @@
 # timer
 
-####翻页时钟
+flip clock (canvas)
 
-####flip clock (canvas)
+翻页时钟
 
 ## Project setup
 ```
