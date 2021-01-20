@@ -59,10 +59,10 @@ export default {
       ctx.moveTo(0, 0)
       ctx.lineTo(800, 0)
       if (up) {
-        ctx.lineTo(800, r-400)
+        ctx.lineTo(800, r - 400)
         ctx.quadraticCurveTo(800, -400, 800 - r, -400)
         ctx.lineTo(r, -400)
-        ctx.quadraticCurveTo(0, -400, 0, r-400)
+        ctx.quadraticCurveTo(0, -400, 0, r - 400)
       } else {
         ctx.lineTo(800, 400 - r)
         ctx.quadraticCurveTo(800, 400, 800 - r, 400)
@@ -88,11 +88,11 @@ export default {
     }
     const blackLine = (ctx, w = 20) => {
       ctx.fillStyle = '#000000'
-      ctx.fillRect(0, - w / 2, 800, w)
+      ctx.fillRect(0, -w / 2, 800, w)
     }
-    const drawPage = (ctx, r, fs, s, up = true,sy=1) => {
+    const drawPage = (ctx, r, fs, s, up = true, sy = 1) => {
       ctx.save()
-      ctx.scale(1,sy)
+      ctx.scale(1, sy)
       clipArea(ctx, r, up)
       if (props.bg) drawBg(ctx)
       drawText(ctx, s)
