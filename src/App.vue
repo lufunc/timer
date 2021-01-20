@@ -14,7 +14,6 @@
 <script>
 import { reactive, toRefs } from 'vue'
 import clock from './components/clock'
-import easeInout from './utils/easeinout'
 export default {
   components: { clock },
   setup () {
@@ -31,28 +30,28 @@ export default {
       showSecond: true
     })
     const zeroNum = (n) => {
-      return n<10 ? '0'+n : n
+      return n < 10 ? '0' + n : n
     }
     const formatNum = (n) => {
-      if(data.hourFormat < 2){
+      if (data.hourFormat < 2) {
         return n
-      }else{
+      } else {
         return zeroNum(n)
       }
     }
     const gettimer = () => {
-      let t = new Date()
-      let h = t.getHours()
-      let m = t.getMinutes()
-      let s = t.getSeconds()
-      return {h,m,s}
+      const t = new Date()
+      const h = t.getHours()
+      const m = t.getMinutes()
+      const s = t.getSeconds()
+      return { h, m, s }
     }
-    let timer = setInterval(() => {
-      let res = gettimer()
+    setInterval(() => {
+      const res = gettimer()
       data.num_h = formatNum(res.h)
       data.num_m = zeroNum(res.m)
       data.num_s = zeroNum(res.s)
-    }, 200);
+    }, 200)
     const ttt = () => {
       console.log('ttt')
       // data.showSecond = !data.showSecond
