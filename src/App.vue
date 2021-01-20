@@ -1,24 +1,26 @@
 <template>
   <div class="bg">
-    <div class="timer" @click="ttt">
-      <clock cid="clock_h"></clock>
-      <clock cid="clock_m"></clock>
-      <clock cid="clock_s"></clock>
+    <div class="timer">
+      <clock cid="clock_h" :msg="num_h"></clock>
+      <!-- <clock cid="clock_m"></clock>
+      <clock cid="clock_s" :msg="num_h"></clock> -->
     </div>
+    <button @click="ttt">ttt{{num_h}}</button>
   </div>
 </template>
 
 <script>
 import { reactive, toRefs } from 'vue'
 import clock from './components/clock'
+import easeInout from './utils/easeinout'
 export default {
   components: { clock },
   setup () {
     const data = reactive({
       // clock content
-      h: 0,
-      m: 0,
-      s: 0,
+      num_h: 9,
+      num_m: 0,
+      num_s: 0,
       // setting
       hourFormat: 0, // 12h 24h 024h
       scale: 1,
@@ -28,6 +30,7 @@ export default {
     })
     const ttt = () => {
       console.log('ttt')
+      data.num_h++
     }
     return {
       ...toRefs(data),
@@ -56,8 +59,8 @@ ul{
 }
 .timer{
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+  // top: 50%;
+  // transform: translateY(-50%);
   display: flex;
   justify-content: space-evenly;
 }
