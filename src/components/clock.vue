@@ -23,7 +23,8 @@ export default {
       const ctx = canvas.getContext('2d')
       console.log('init')
       const r = 64
-      const fontSize = 640
+      const fontSize = 660
+      ctx.translate(0, 400)
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.font = 'normal bold ' + fontSize + 'px Arial'
@@ -55,18 +56,18 @@ export default {
     // }
     const clipArea = (ctx, r, up) => {
       ctx.beginPath()
-      ctx.moveTo(0, 400)
-      ctx.lineTo(800, 400)
+      ctx.moveTo(0, 0)
+      ctx.lineTo(800, 0)
       if (up) {
-        ctx.lineTo(800, r)
-        ctx.quadraticCurveTo(800, 0, 800 - r, 0)
-        ctx.lineTo(r, 0)
-        ctx.quadraticCurveTo(0, 0, 0, r)
+        ctx.lineTo(800, r-400)
+        ctx.quadraticCurveTo(800, -400, 800 - r, -400)
+        ctx.lineTo(r, -400)
+        ctx.quadraticCurveTo(0, -400, 0, r-400)
       } else {
-        ctx.lineTo(800, 800 - r)
-        ctx.quadraticCurveTo(800, 800, 800 - r, 800)
-        ctx.lineTo(r, 800)
-        ctx.quadraticCurveTo(0, 800, 0, 800 - r)
+        ctx.lineTo(800, 400 - r)
+        ctx.quadraticCurveTo(800, 400, 800 - r, 400)
+        ctx.lineTo(r, 400)
+        ctx.quadraticCurveTo(0, 400, 0, 400 - r)
       }
       ctx.clip()
     }
@@ -78,19 +79,20 @@ export default {
     }
     const drawBg = (ctx) => {
       ctx.fillStyle = gradient(ctx, 'blue', 'yellow')
-      ctx.fillRect(0, 0, 800, 800)
+      ctx.fillRect(0, -400, 800, 800)
     }
     const drawText = (ctx, s) => {
       console.log('s', s)
       ctx.fillStyle = gradient(ctx, 'red', 'blue')
-      ctx.fillText(s, 400, 400)
+      ctx.fillText(s, 400, 0)
     }
     const blackLine = (ctx, w = 20) => {
       ctx.fillStyle = '#000000'
-      ctx.fillRect(0, 400 - w / 2, 800, w)
+      ctx.fillRect(0, - w / 2, 800, w)
     }
-    const drawPage = (ctx, r, fs, s, up = true) => {
+    const drawPage = (ctx, r, fs, s, up = true,sy=1) => {
       ctx.save()
+      ctx.scale(1,sy)
       clipArea(ctx, r, up)
       if (props.bg) drawBg(ctx)
       drawText(ctx, s)
