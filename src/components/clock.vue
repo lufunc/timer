@@ -90,7 +90,7 @@ export default {
     }
     const drawBg = () => {
       let ctx = data.ctx
-      ctx.fillStyle = gradient(ctx, 'blue', 'yellow')
+      ctx.fillStyle = gradient(ctx, '#161616', '#0c0c0c')
       ctx.fillRect(0, -400, 800, 800)
     }
     const drawAmpm = (ap) => {
@@ -110,7 +110,7 @@ export default {
     }
     const drawText = (s) => {
       let ctx = data.ctx
-      ctx.fillStyle = gradient(ctx, 'red', 'blue')
+      ctx.fillStyle = gradient(ctx, '#bcbcbc', '#b8b8b8')
       ctx.fillText(s, 400, 0)
     }
     const blackLine = (w = 20) => {
@@ -124,6 +124,7 @@ export default {
       ctx.scale(1, sy) // scale Y
       clipArea(up)
       if (props.bg) drawBg();
+      else ctx.clearRect(0, -400, 800, 800);
       if (props.ampm) drawAmpm(ap);
       drawText(s)
       blackLine()
@@ -184,6 +185,7 @@ export default {
         console.log('watch',props.msg,props.ampm)
         drawFlip()
     })
+    watch(()=>props.bg,()=>{drawFlip()})
     // watchEffect(()=>{
     //   console.log('watchEffect',props.msg,props.ampm)
     //   if(data.ctx){
@@ -200,7 +202,6 @@ export default {
 .clock{
   width: 240px;
   height: 240px;
-  // background-color: #666;
 }
 .clock_canva{
   width: 100%;
