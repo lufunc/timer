@@ -5,9 +5,8 @@
 </template>
 
 <script>
-import { onMounted, reactive, computed, watchEffect } from 'vue'
+import { onMounted, reactive, computed, watchEffect, watch } from 'vue'
 import easeInout from '../utils/easeinout'
-var ctx = null
 export default {
   props: {
     cid: String,
@@ -27,7 +26,8 @@ export default {
       fontSize: 660,
       flipping: false,
       tempVal: '08',
-      tempAp: 'AM'
+      tempAp: 'AM',
+      ctx: null
     })
     const getAp = () => {
       let res = ''
@@ -44,7 +44,8 @@ export default {
     const init = () => {
       const canvas = document.querySelector('#' + props.cid)
       if (!canvas.getContext) return
-      ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d')
+      data.ctx = ctx
       console.log('init')
       const r = 64
       const fontSize = 660
@@ -53,10 +54,13 @@ export default {
       ctx.textBaseline = 'middle'
       ctx.font = 'normal bold ' + fontSize + 'px Arial'
       let ap = getAp()
+      data.tempAp = ap
+      data.tempVal = props.msg
       drawPage(props.msg,ap,true)
       drawPage(props.msg,ap,false)
     }
     const clipArea = (up) => {
+      let ctx = data.ctx
       let r = data.r
       ctx.beginPath()
       ctx.moveTo(0, 0)
@@ -81,10 +85,12 @@ export default {
       return lg
     }
     const drawBg = () => {
+      let ctx = data.ctx
       ctx.fillStyle = gradient(ctx, 'blue', 'yellow')
       ctx.fillRect(0, -400, 800, 800)
     }
     const drawAmpm = (ap) => {
+      let ctx = data.ctx
       // console.log('ap', ap)
       let x = 100,y=264
       ctx.save()
@@ -99,14 +105,17 @@ export default {
       ctx.restore()
     }
     const drawText = (s) => {
+      let ctx = data.ctx
       ctx.fillStyle = gradient(ctx, 'red', 'blue')
       ctx.fillText(s, 400, 0)
     }
     const blackLine = (w = 20) => {
+      let ctx = data.ctx
       ctx.fillStyle = '#000000'
       ctx.fillRect(0, -w / 2, 800, w)
     }
     const drawPage = (s,ap,up = true, sy = 1) => {
+      let ctx = data.ctx
       ctx.save()
       ctx.scale(1, sy) // scale Y
       clipArea(up)
@@ -117,8 +126,9 @@ export default {
       ctx.restore()
     }
     const drawFlip = () => {
-      let timer = new Date().getTime()
+      if(data.flipping) return;
       data.flipping = true
+      let timer = new Date().getTime()
       let duration = 600
       let ap = getAp()
       const flipping = () => {
@@ -126,8 +136,8 @@ export default {
         let t=temp-timer
         if(t>duration){
           data.flipping = false
-          // data.tempVal = props.msg
-          // data.tempAp = ap
+          data.tempVal = props.msg
+          data.tempAp = ap
           drawPage(props.msg,ap,false)
           return
         }
@@ -165,14 +175,19 @@ export default {
       }
       ttt2()
     }
-    watchEffect(()=>{
-      console.log('watchEffect',props.msg,props.ampm)
-      if(ctx){
-        console.log('ctx')
-        // ttt()
+    watch([()=>props.msg,()=>props.ampm],
+      ()=>{
+        console.log('watch',props.msg,props.ampm)
         drawFlip()
-      }
     })
+    // watchEffect(()=>{
+    //   console.log('watchEffect',props.msg,props.ampm)
+    //   if(data.ctx){
+    //     console.log('ctx')
+    //     // ttt()
+    //     drawFlip()
+    //   }
+    // })
   }
 }
 </script>

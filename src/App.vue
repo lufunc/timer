@@ -2,8 +2,8 @@
   <div class="bg">
     <div class="timer">
       <clock cid="clock_h" :msg="num_h"></clock>
-      <!-- <clock cid="clock_m"></clock>
-      <clock cid="clock_s" :msg="num_h"></clock> -->
+      <clock cid="clock_m" :msg="num_m"></clock>
+      <clock cid="clock_s" :msg="num_s"></clock>
     </div>
     <button @click="ttt">ttt{{num_h}}</button>
   </div>
@@ -18,9 +18,9 @@ export default {
   setup () {
     const data = reactive({
       // clock content
-      num_h: 9,
-      num_m: 0,
-      num_s: 0,
+      num_h: '你',
+      num_m: '好',
+      num_s: '啊',
       // setting
       hourFormat: 0, // 12h 24h 024h
       scale: 1,
