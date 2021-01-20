@@ -1,11 +1,10 @@
 <template>
   <div class="bg">
     <div class="timer">
-      <clock cid="clock_h" :msg="num_h"></clock>
-      <clock cid="clock_m" :msg="num_m"></clock>
-      <clock cid="clock_s" :msg="num_s"></clock>
+      <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_h" :msg="num_h" :ampm="hourFormat===0"></clock>
+      <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_m" :msg="num_m"></clock>
+      <clock v-if="showSecond" :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_s" :msg="num_s"></clock>
     </div>
-    <button @click="ttt">ttt{{num_h}}</button>
   </div>
 </template>
 
@@ -28,9 +27,32 @@ export default {
       showBg: true,
       showSecond: true
     })
+    const zeroNum = (n) => {
+      return n<10 ? '0'+n : n
+    }
+    const formatNum = (n) => {
+      if(data.hourFormat < 2){
+        return n
+      }else{
+        return zeroNum(n)
+      }
+    }
+    const gettimer = () => {
+      let t = new Date()
+      let h = t.getHours()
+      let m = t.getMinutes()
+      let s = t.getSeconds()
+      return {h,m,s}
+    }
+    let timer = setInterval(() => {
+      let res = gettimer()
+      data.num_h = formatNum(res.h)
+      data.num_m = zeroNum(res.m)
+      data.num_s = zeroNum(res.s)
+    }, 200);
     const ttt = () => {
       console.log('ttt')
-      data.num_h++
+      data.showSecond = !data.showSecond
     }
     return {
       ...toRefs(data),
@@ -59,9 +81,17 @@ ul{
 }
 .timer{
   position: relative;
-  // top: 50%;
-  // transform: translateY(-50%);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   justify-content: space-evenly;
+}
+.timer_hm{
+  width: 47.5vw;
+  height: 47.5vw;
+}
+.timer_hms{
+  width: 30vw;
+  height: 30vw;
 }
 </style>

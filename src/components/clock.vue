@@ -17,7 +17,7 @@ export default {
       default: true
     },
     ampm: {
-      default: true
+      default: false
     }
   },
   setup (props) {
@@ -30,13 +30,17 @@ export default {
       ctx: null
     })
     const getAp = () => {
-      let res = ''
+      let res = {}
+      res.ap = ''
+      res.num = props.msg
       if(props.ampm){
         let num = parseInt(props.msg)
+        // let num = props.msg
         if(num<12){
-          res =  'AM'
+          res.ap =  'AM'
         }else if(num<24){
-          res =  'PM'
+          res.ap =  'PM'
+          res.num = num-12
         }
       }
       return res
@@ -53,11 +57,11 @@ export default {
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.font = 'normal bold ' + fontSize + 'px Arial'
-      let ap = getAp()
+      let {ap,num} = getAp()
       data.tempAp = ap
-      data.tempVal = props.msg
-      drawPage(props.msg,ap,true)
-      drawPage(props.msg,ap,false)
+      data.tempVal = num
+      drawPage(num,ap,true)
+      drawPage(num,ap,false)
     }
     const clipArea = (up) => {
       let ctx = data.ctx
@@ -130,30 +134,30 @@ export default {
       data.flipping = true
       let timer = new Date().getTime()
       let duration = 600
-      let ap = getAp()
+      let {ap,num} = getAp()
       const flipping = () => {
         let temp = new Date().getTime()
         let t=temp-timer
         if(t>duration){
           data.flipping = false
-          data.tempVal = props.msg
+          data.tempVal = num
           data.tempAp = ap
-          drawPage(props.msg,ap,false)
+          drawPage(num,ap,false)
           return
         }
         let drawUp = true // Page turning is done and draw it again
         let pi = Math.PI
         let sy = Math.sin(easeInout(t,-90,90,duration)*pi/180)
         if(t<duration>>1){
-          drawPage(props.msg,ap)
+          drawPage(num,ap)
           drawPage(data.tempVal,data.tempAp,true,-sy)
         }else{
           if(drawUp){
             drawUp = false
-            drawPage(props.msg,ap)
+            drawPage(num,ap)
           }
           drawPage(data.tempVal,data.tempAp,false)
-          drawPage(props.msg,ap,false,sy)
+          drawPage(num,ap,false,sy)
         }
         requestAnimationFrame(flipping)
       }
