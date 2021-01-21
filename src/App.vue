@@ -86,11 +86,15 @@ export default {
     }, 200)
     const ttt = () => {
       console.log('ttt')
-      // data.showSecond = !data.showSecond
       // data.hourFormat++
-      // if(data.hourFormat>2) data.hourFormat=0;
-      data.showBg = !data.showBg
-      console.log('data.showBg', data.showBg)
+      // if(data.hourFormat>2) data.hourFormat=0
+      // let t = new Date().getTime()
+      // t = t + 1000*60*5
+      // data.tempTime = t
+      // data.timeMode = 1
+      // let t = new Date().getTime()
+      // data.tempTime = t
+      // data.timeMode = 2
     }
     return {
       ...toRefs(data),
