@@ -24,6 +24,7 @@ export default {
     const data = reactive({
       r: 64,
       fontSize: 660,
+      fontFamily: 'Arial',
       flipping: false,
       tempVal: '08',
       tempAp: 'AM',
@@ -54,7 +55,7 @@ export default {
       ctx.translate(0, 400)
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.font = 'normal bold ' + data.fontSize + 'px Arial'
+      ctx.font = 'normal bold ' + data.fontSize + 'px '+data.fontFamily
       const { ap, num } = getAp()
       data.tempAp = ap
       data.tempVal = num
@@ -96,7 +97,7 @@ export default {
       // console.log('ap', ap)
       const x = 100; const y = 264
       ctx.save()
-      ctx.font = 'normal bold 80px Arial'
+      ctx.font = 'normal bold 80px '+data.fontFamily
       if (ap === 'AM') {
         ctx.fillStyle = '#bbbbbb'
         ctx.fillText(ap, x, -y)
