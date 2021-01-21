@@ -41,7 +41,7 @@ export default {
           res.ap = 'AM'
         } else if (num < 24) {
           res.ap = 'PM'
-          res.num = num - 12
+          res.num = num - 12 >0?num - 12:12
         }
       }
       return res
