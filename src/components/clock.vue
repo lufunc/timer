@@ -41,7 +41,7 @@ export default {
           res.ap = 'AM'
         } else if (num < 24) {
           res.ap = 'PM'
-          res.num = num - 12 >0?num - 12:12
+          res.num = num - 12 > 0 ? num - 12 : 12
         }
       }
       return res
@@ -55,7 +55,7 @@ export default {
       ctx.translate(0, 400)
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.font = 'normal bold ' + data.fontSize + 'px '+data.fontFamily
+      ctx.font = 'normal bold ' + data.fontSize + 'px ' + data.fontFamily
       const { ap, num } = getAp()
       data.tempAp = ap
       data.tempVal = num
@@ -97,7 +97,7 @@ export default {
       // console.log('ap', ap)
       const x = 100; const y = 264
       ctx.save()
-      ctx.font = 'normal bold 80px '+data.fontFamily
+      ctx.font = 'normal bold 80px ' + data.fontFamily
       if (ap === 'AM') {
         ctx.fillStyle = '#bbbbbb'
         ctx.fillText(ap, x, -y)

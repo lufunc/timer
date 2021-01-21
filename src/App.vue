@@ -16,7 +16,7 @@ import { reactive, toRefs } from 'vue'
 import clock from './components/clock'
 import setbox from './components/setbox'
 export default {
-  components: { clock,setbox },
+  components: { clock, setbox },
   setup () {
     const data = reactive({
       // clock content
@@ -50,34 +50,32 @@ export default {
       return { h, m, s }
     }
     const getTimer = () => {
-      let temp = new Date().getTime()
+      const temp = new Date().getTime()
       let t = data.tempTime - temp
-      if(t<0) return {h:0,m:0,s:0};
-      t = parseInt(t/1000)
-      let h = parseInt(t/3600)
-      let m = parseInt(t/60) % 60
-      let s = t%60
-      return {h,m,s}
+      if (t < 0) return { h: 0, m: 0, s: 0 }
+      t = parseInt(t / 1000)
+      const h = parseInt(t / 3600)
+      const m = parseInt(t / 60) % 60
+      const s = t % 60
+      return { h, m, s }
     }
     const stopWatch = () => {
-      let temp = new Date().getTime()
+      const temp = new Date().getTime()
       let t = temp - data.tempTime
-      t = parseInt(t/1000)
-      let h = parseInt(t/3600)
-      let m = parseInt(t/60) % 60
-      let s = t%60
-      return {h,m,s}
+      t = parseInt(t / 1000)
+      const h = parseInt(t / 3600)
+      const m = parseInt(t / 60) % 60
+      const s = t % 60
+      return { h, m, s }
     }
     setInterval(() => {
       let res = null
-      let m = data.timeMode
-      if(m === 0){
-        res = getClock()
-      }else if(m === 1){
+      const m = data.timeMode
+      if (m === 1) {
         res = getTimer()
-      }else if(m === 2){
+      } else if (m === 2) {
         res = stopWatch()
-      }else{
+      } else {
         res = getClock()
       }
       data.num_h = formatNum(res.h)
