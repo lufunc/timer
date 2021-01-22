@@ -142,13 +142,14 @@ export default {
           data.flipping = false
           data.tempVal = num
           data.tempAp = ap
+          drawPage(num, ap)
           drawPage(num, ap, false)
           return
         }
         let drawUp = true // Page turning is done and draw it again
         const pi = Math.PI
         const sy = Math.sin(easeInout(t, -90, 90, duration) * pi / 180)
-        if (t < duration >> 1) {
+        if (t < duration/2) {
           drawPage(num, ap)
           drawPage(data.tempVal, data.tempAp, true, -sy)
         } else {

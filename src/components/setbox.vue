@@ -1,41 +1,64 @@
 <template>
   <div class="setbox">
-    <div class="setting" @click="ttt">
-      <div class="pic_set"></div>
-      <div class="set_item">
-        <div class="set_inner">
-          <slot></slot>
-        </div>
+    <div class="set-warp" @mouseleave="hideSet">
+      <div class="setting" @mouseenter="isShow=true">
+        <div class="pic_set"></div>
+      </div>
+    </div>
+    <div class="set_item" v-show="isShow">
+      <div class="set_inner" ref="setDom" @mouseleave="hideSet">
+        <slot></slot>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {ref} from 'vue'
 export default {
-
+  setup(){
+    const isShow = ref(false)
+    const setDom = ref(null)
+    const hideSet = (e) => {
+      if(e.toElement && setDom.value !== e.toElement){
+        isShow.value=false
+      }
+    }
+    const ttt = () => {
+      console.log('ttt')
+    }
+    return {
+      isShow,
+      setDom,
+      hideSet,
+      ttt
+    }
+  }
 }
 </script>
 
 <style lang="less">
-@import '../assets/base';
+@import '../assets/images';
 .setbox{
   width: 200px;
   height: 200px;
-  &:hover .setting{
+  &:hover .pic_set{
     opacity: 1;
   }
 }
+.set-warp{
+  display: inline-block;
+  padding: 20px 20px 12px 24px;
+  margin-top: 94px;
+  margin-left: 78px;
+  // background-color: #fff;
+}
 .setting{
-  position: relative;
-  top: 110px;
-  left: 110px;
   width: 36px;
   height: 36px;
-  padding: 12px 0;
-  opacity: 0;
-  &:hover .set_item{
-    display: block;
+  padding: 8px;
+  &:hover>div{
+    transform: rotateZ(120deg);
   }
 }
 .pic_set{
@@ -43,20 +66,18 @@ export default {
   height: 36px;
   background-image: url(@set_pic);
   transition: all 0.5s ease-in-out;
-  &:hover{
-    transform: rotateZ(120deg);
-  }
+  opacity: 0;
 }
 .set_item{
-  display: none;
   position: absolute;
-  top: -318px;
-  left: -366px;
-  width: 430px;
-  height: 310px;
+  top: -208px;
+  left: -256px;
+  width: 432px;
+  height: 312px;
 }
 .set_inner{
   position: relative;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   background-color: #262729;

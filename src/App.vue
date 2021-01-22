@@ -106,14 +106,7 @@ export default {
 
 <style lang="less">
 @import './assets/base';
-body{
-  margin: 0;
-}
-ul{
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
+@import './assets/images';
 .bg{
   position: fixed;
   top: 0;
