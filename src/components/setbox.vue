@@ -14,14 +14,14 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import { ref } from 'vue'
 export default {
-  setup(){
+  setup () {
     const isShow = ref(false)
     const setDom = ref(null)
     const hideSet = (e) => {
-      if(e.toElement && setDom.value !== e.toElement){
-        isShow.value=false
+      if (e.toElement && setDom.value !== e.toElement) {
+        isShow.value = false
       }
     }
     const ttt = () => {
