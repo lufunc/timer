@@ -7,6 +7,8 @@
     </div>
     <setbox class="set_box">
       <div @click="ttt">ttt</div>
+      <button>777</button>
+      <button>666</button>
     </setbox>
   </div>
 </template>
@@ -103,6 +105,7 @@ export default {
 </script>
 
 <style lang="less">
+@import './assets/base';
 body{
   margin: 0;
 }
