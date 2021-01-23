@@ -10,7 +10,7 @@
       <div class="panel-down" @click="changeNum(1)">﹀</div>
     </div>
   </div>
-  
+
 </template>
 
 <script>
@@ -22,7 +22,7 @@ export default {
       default: 12
     }
   },
-  setup(props, { emit }){
+  setup (props, { emit }) {
     const data = reactive({
       val: 0,
       temp: [],
@@ -31,48 +31,48 @@ export default {
     })
     // console.log('props.numRange', props.numRange)
     const init = () => {
-      for(let i=0;i<props.numRange;i++){
-        let x = i>9? i : '0'+i
+      for (let i = 0; i < props.numRange; i++) {
+        const x = i > 9 ? i : '0' + i
         data.temp.push(x)
       }
     }
     init()
-    const throttle = (fn, wait=300) => {
+    const throttle = (fn, wait = 300) => {
       data.timeout = null
-      return function(){
+      return function () {
         clearTimeout(data.timeout)
         data.timeout = setTimeout(() => {
-          fn.apply(this,arguments)
-        }, wait);
+          fn.apply(this, arguments)
+        }, wait)
       }
     }
     const changeNum = (n) => {
-      if(data.timeout) clearTimeout(data.timeout);
-      let e = data.sb
-      let t = e.scrollTop
-      let h = 24
-      let tl = data.temp.length
-      for(let i=tl-1;i>=0;i--){
-        if(t > h*i-h/2){
+      if (data.timeout) clearTimeout(data.timeout)
+      const e = data.sb
+      const t = e.scrollTop
+      const h = 24
+      const tl = data.temp.length
+      for (let i = tl - 1; i >= 0; i--) {
+        if (t > h * i - h / 2) {
           // console.log('i', i)
-          let x = i +n
-          if(x<0) x=0;
-          if(x>tl-1) x=tl-1;
+          let x = i + n
+          if (x < 0) x = 0
+          if (x > tl - 1) x = tl - 1
           // console.log('x', x)
-          e.scrollTop = h*x
-          emit('update:modelValue',x)
+          e.scrollTop = h * x
+          emit('update:modelValue', x)
           break
         }
       }
     }
-    const comfirmNum = throttle(()=>{
+    const comfirmNum = throttle(() => {
       changeNum(0)
     })
-    onMounted(()=>{
-      data.sb.scrollTop = props.modelValue*24
+    onMounted(() => {
+      data.sb.scrollTop = props.modelValue * 24
       setTimeout(() => {
-        data.sb.addEventListener('scroll',comfirmNum)
-      }, 0);
+        data.sb.addEventListener('scroll', comfirmNum)
+      }, 0)
     })
     return {
       ...toRefs(data),

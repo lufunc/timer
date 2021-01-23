@@ -10,44 +10,44 @@
 <script>
 import { ref } from 'vue'
 export default {
-props:{
-  modelValue: Number,
-  barHeight: {
-    default: '20px'
+  props: {
+    modelValue: Number,
+    barHeight: {
+      default: '20px'
+    },
+    lineHeight: {
+      default: '4px'
+    }
   },
-  lineHeight: {
-    default: '4px'
-  }
-},
-setup(props, { emit }){
-  const mySlider = ref(null)
-  const sliderHandle = (event) => {
-    let x = props.barHeight.match(/(\d+)/)[1]
-    x = parseInt(x)
-    let temp = mySlider.value
-    let tl = temp.getBoundingClientRect().left
-    let tw = temp.offsetWidth
-    const numRange = (n) => {
-      let res = n
-      let max = tw-x
-      if(n<0) res= 0;
-      else if(n>max) res= max;
-      emit('update:modelValue',parseInt(res*100/max))
+  setup (props, { emit }) {
+    const mySlider = ref(null)
+    const sliderHandle = (event) => {
+      let x = props.barHeight.match(/(\d+)/)[1]
+      x = parseInt(x)
+      const temp = mySlider.value
+      const tl = temp.getBoundingClientRect().left
+      const tw = temp.offsetWidth
+      const numRange = (n) => {
+        let res = n
+        const max = tw - x
+        if (n < 0) res = 0
+        else if (n > max) res = max
+        emit('update:modelValue', parseInt(res * 100 / max))
+      }
+      numRange(event.pageX - tl - x / 2)
+      document.onmousemove = (e) => {
+        numRange(e.pageX - tl - x / 2)
+      }
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
     }
-    numRange(event.pageX-tl-x/2)
-    document.onmousemove = (e) => {
-      numRange(e.pageX - tl - x/2)
-    }
-    document.onmouseup = ()=>{
-      document.onmousemove = null
-      document.onmouseup = null
+    return {
+      sliderHandle,
+      mySlider
     }
   }
-  return {
-    sliderHandle,
-    mySlider
-  }
-}
 }
 </script>
 

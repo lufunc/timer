@@ -81,13 +81,13 @@
 </template>
 
 <script>
-import { reactive, toRefs, watch, onMounted } from 'vue'
+import { reactive, toRefs, onMounted } from 'vue'
 import clock from './components/clock'
 import setbox from './components/setbox'
 import slider from './components/slider'
 import timePicker from './components/timePicker'
 export default {
-  components: { clock, setbox,slider,timePicker },
+  components: { clock, setbox, slider, timePicker },
   setup () {
     const data = reactive({
       setRef: null,
@@ -112,8 +112,8 @@ export default {
       setShow: null
     })
     const zeroNum = (n) => {
-      let str = n.toString()
-      return str[1] ? n : '0'+str
+      const str = n.toString()
+      return str[1] ? n : '0' + str
     }
     const formatNum = (n) => {
       if (data.hourFormat < 2) {
@@ -131,48 +131,48 @@ export default {
     }
     const getTimer = (n) => {
       data.watching = true
-      let t=0
-      if(n==0){
-        t = (data.my_h*3600+data.my_m*60+data.my_s)*1000
+      let t = 0
+      if (n === 0) {
+        t = (data.my_h * 3600 + data.my_m * 60 + data.my_s) * 1000
         console.log('t', t)
       } else {
-        t = 1000*60*n
+        t = 1000 * 60 * n
       }
-      let temp = new Date().getTime()
-      data.watchTime = temp+t
+      const temp = new Date().getTime()
+      data.watchTime = temp + t
       data.timeMode = 1
-      data.setRef.hideSet_f()
+      data.setRef.hidesetF()
     }
     const _getTimer = () => {
-      if(data.watching){
+      if (data.watching) {
         const temp = new Date().getTime()
         let t = data.watchTime - temp
-        if (t <= 0) return { h: 'ok', m: 'ok', s: 'ok' };
+        if (t <= 0) return { h: 'ok', m: 'ok', s: 'ok' }
         t = parseInt(t / 1000)
         const h = parseInt(t / 3600)
         const m = parseInt(t / 60) % 60
         const s = t % 60
         return { h, m, s }
-      }else{
+      } else {
         return {
-          h:data.num_h,
-          m:data.num_m,
-          s:data.num_s
+          h: data.num_h,
+          m: data.num_m,
+          s: data.num_s
         }
       }
     }
     const cancelTimer = () => {
       data.timeMode = 0
-      data.setRef.hideSet_f()
+      data.setRef.hidesetF()
     }
     const stopWatch = () => {
       data.watchTime = new Date().getTime()
       data.watching = true
       data.timeMode = 2
-      data.setRef.hideSet_f()
+      data.setRef.hidesetF()
     }
     const _stopWatch = () => {
-      if(data.watching){
+      if (data.watching) {
         const temp = new Date().getTime()
         let t = temp - data.watchTime
         t = parseInt(t / 1000)
@@ -180,38 +180,38 @@ export default {
         const m = parseInt(t / 60) % 60
         const s = t % 60
         return { h, m, s }
-      }else{
+      } else {
         return {
-          h:data.num_h,
-          m:data.num_m,
-          s:data.num_s
+          h: data.num_h,
+          m: data.num_m,
+          s: data.num_s
         }
       }
     }
     const cancelWatch = () => {
       data.timeMode = 0
-      data.setRef.hideSet_f()
+      data.setRef.hidesetF()
     }
     const startStop = () => {
-      let t = document.getElementsByClassName('pic_set')[0]
+      const t = document.getElementsByClassName('pic_set')[0]
       t.style.opacity = 1
-      if(data.setShow) clearTimeout(data.setShow);
+      if (data.setShow) clearTimeout(data.setShow)
       data.setShow = setTimeout(() => {
         t.style.opacity = ''
-      }, 400);
-      if(data.watching){
+      }, 400)
+      if (data.watching) {
         data.watching = false
         data.stopTime = new Date().getTime()
-      }else{
+      } else {
         data.watching = true
-        let temp = new Date().getTime()
+        const temp = new Date().getTime()
         data.watchTime = data.watchTime + temp - data.stopTime
       }
     }
     setInterval(() => {
       let res = {}
       const m = data.timeMode
-      if(m===0){
+      if (m === 0) {
         res = getClock()
       } else if (m === 1) {
         res = _getTimer()
@@ -222,10 +222,10 @@ export default {
       data.num_m = zeroNum(res.m)
       data.num_s = zeroNum(res.s)
     }, 200)
-    onMounted(()=>{
-      document.onkeydown = (e)=>{
+    onMounted(() => {
+      document.onkeydown = (e) => {
         // console.log('e.keyCode', e.keyCode)
-        if(e.keyCode === 32 || e.keyCode===13){
+        if (e.keyCode === 32 || e.keyCode === 13) {
           startStop()
         }
       }

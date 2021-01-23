@@ -22,17 +22,17 @@ export default {
         isShow.value = false
       }
     }
-    const hideSet_f = () => {
+    const hidesetF = () => {
       isShow.value = false
     }
-    onMounted(()=>{
+    onMounted(() => {
       setDom.value.classList.remove('setLoad')
     })
     return {
       isShow,
       setDom,
       hideSet,
-      hideSet_f
+      hidesetF
     }
   }
 }
