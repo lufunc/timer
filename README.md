@@ -1,6 +1,6 @@
 # timer
 
-flip clock (canvas)
+flip clock
 
 翻页时钟
 
