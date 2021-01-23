@@ -86,6 +86,7 @@ import clock from './components/clock'
 import setbox from './components/setbox'
 import slider from './components/slider'
 import timePicker from './components/timePicker'
+import {getClock,zeroNum} from './utils/getnum'
 export default {
   components: { clock, setbox, slider, timePicker },
   setup () {
@@ -111,23 +112,12 @@ export default {
       my_s: 3,
       setShow: null
     })
-    const zeroNum = (n) => {
-      const str = n.toString()
-      return str[1] ? n : '0' + str
-    }
     const formatNum = (n) => {
       if (data.hourFormat < 2) {
         return n
       } else {
         return zeroNum(n)
       }
-    }
-    const getClock = () => {
-      const t = new Date()
-      const h = t.getHours()
-      const m = t.getMinutes()
-      const s = t.getSeconds()
-      return { h, m, s }
     }
     const getTimer = (n) => {
       data.watching = true
