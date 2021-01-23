@@ -14,7 +14,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 export default {
-  setup (props, {emit}) {
+  setup (props, { emit }) {
     const isShow = ref(false)
     const setDom = ref(null)
     const hidesetF = () => {

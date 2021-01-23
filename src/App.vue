@@ -87,7 +87,7 @@ import clock from './components/clock'
 import setbox from './components/setbox'
 import slider from './components/slider'
 import timePicker from './components/timePicker'
-import {getClock,zeroNum} from './utils/getnum'
+import { getClock, zeroNum } from './utils/getnum'
 export default {
   components: { clock, setbox, slider, timePicker },
   setup () {
@@ -185,7 +185,7 @@ export default {
     const startStop = () => {
       const t = document.getElementsByClassName('pic_set')[0]
       t.style.opacity = 1
-      if (data.setShow) clearTimeout(data.setShow);
+      if (data.setShow) clearTimeout(data.setShow)
       data.setShow = setTimeout(() => {
         t.style.opacity = ''
       }, 400)
@@ -213,18 +213,18 @@ export default {
       data.num_s = zeroNum(res.s)
     }, 200)
     const saveSet = () => {
-      let arr = ['hourFormat', 'scale', 'brightness', 'showBg', 'showSecond','my_h','my_m','my_s']
-      let info = {}
-      for(let k of arr){
+      const arr = ['hourFormat', 'scale', 'brightness', 'showBg', 'showSecond', 'my_h', 'my_m', 'my_s']
+      const info = {}
+      for (const k of arr) {
         info[k] = data[k]
       }
-      let t = JSON.stringify(info)
+      const t = JSON.stringify(info)
       localStorage.info = t
     }
     const readSet = () => {
-      if(localStorage.info){
-        let info = JSON.parse(localStorage.info)
-        for(let k in info){
+      if (localStorage.info) {
+        const info = JSON.parse(localStorage.info)
+        for (const k in info) {
           data[k] = info[k]
         }
       }
