@@ -42,8 +42,8 @@
         </li>
         <li>
           <div class="setName">Stopwatch:</div>
-          <button class="timerBtn startBtn" @click="stopWatch">开始</button>
-          <button class="timerBtn startBtn" @click="cancelWatch">取消</button>
+          <button class="timerBtn startBtn" @click="stopWatch">Start</button>
+          <button class="timerBtn startBtn" @click="cancelWatch">Cancel</button>
         </li>
         <li>
           <div class="setName">Timer:</div>
@@ -61,15 +61,15 @@
           </button>
           <button class="timerBtn" @click="cancelTimer" style="margin-right: 0px;">
             <span class="iconCancel"></span>
-            <span style="vertical-align: middle;">取消</span>
+            <span style="vertical-align: middle;">Off</span>
           </button>
         </li>
         <li>
-          <div class="setName">自定义计时:</div>
+          <div class="setName">My Timer:</div>
           <timePicker :numRange="24" v-model="my_h"></timePicker>
           <timePicker :numRange="60" v-model="my_m"></timePicker>
           <timePicker :numRange="60" v-model="my_s"></timePicker>
-          <button class="timerBtn" @click="getTimer(0)" style="margin-left: 4px;">开始</button>
+          <button class="timerBtn" @click="getTimer(0)" style="margin-left: 4px;">Start</button>
           <!-- <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span> -->
         </li>
       </ul>
@@ -147,7 +147,7 @@ export default {
       if(data.watching){
         const temp = new Date().getTime()
         let t = data.watchTime - temp
-        if (t < 0) return { h: 'ok', m: 'ok', s: 'ok' };
+        if (t <= 0) return { h: 'ok', m: 'ok', s: 'ok' };
         t = parseInt(t / 1000)
         const h = parseInt(t / 3600)
         const m = parseInt(t / 60) % 60
