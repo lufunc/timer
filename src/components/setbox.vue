@@ -14,16 +14,17 @@
 <script>
 import { ref, onMounted } from 'vue'
 export default {
-  setup () {
+  setup (props, {emit}) {
     const isShow = ref(false)
     const setDom = ref(null)
-    const hideSet = (e) => {
-      if (e.toElement && setDom.value !== e.toElement) {
-        isShow.value = false
-      }
-    }
     const hidesetF = () => {
       isShow.value = false
+      emit('closeSet')
+    }
+    const hideSet = (e) => {
+      if (e.toElement && setDom.value !== e.toElement) {
+        hidesetF()
+      }
     }
     onMounted(() => {
       setDom.value.classList.remove('setLoad')

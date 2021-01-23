@@ -37,7 +37,7 @@ export default {
       }
     }
     init()
-    const throttle = (fn, wait = 300) => {
+    const debounce = (fn, wait = 300) => {
       data.timeout = null
       return function () {
         clearTimeout(data.timeout)
@@ -65,7 +65,7 @@ export default {
         }
       }
     }
-    const comfirmNum = throttle(() => {
+    const comfirmNum = debounce(() => {
       changeNum(0)
     })
     onMounted(() => {

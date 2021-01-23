@@ -9,7 +9,7 @@
         <div style="color: #666;">click or space</div>
       </div>
     </div>
-    <setbox class="set_box" ref="setRef">
+    <setbox class="set_box" ref="setRef" @closeSet="saveSet">
       <ul class="set_box_inner">
         <li>
           <div class="setName">Hour Format:</div>
@@ -99,7 +99,7 @@ export default {
       num_s: '!',
       // setting
       hourFormat: 0, // 12h 24h 024h
-      scale: 90,
+      scale: 100,
       brightness: 100,
       showBg: true,
       showSecond: true,
@@ -107,9 +107,9 @@ export default {
       tempTime: 0,
       stopTime: 0,
       watching: true,
-      my_h: 1,
-      my_m: 2,
-      my_s: 3,
+      my_h: 0,
+      my_m: 0,
+      my_s: 0,
       setShow: null
     })
     const formatNum = (n) => {
@@ -212,6 +212,24 @@ export default {
       data.num_m = zeroNum(res.m)
       data.num_s = zeroNum(res.s)
     }, 200)
+    const saveSet = () => {
+      let arr = ['hourFormat', 'scale', 'brightness', 'showBg', 'showSecond','my_h','my_m','my_s']
+      let info = {}
+      for(let k of arr){
+        info[k] = data[k]
+      }
+      let t = JSON.stringify(info)
+      localStorage.info = t
+    }
+    const readSet = () => {
+      if(localStorage.info){
+        let info = JSON.parse(localStorage.info)
+        for(let k in info){
+          data[k] = info[k]
+        }
+      }
+    }
+    readSet()
     onMounted(() => {
       document.onkeydown = (e) => {
         // console.log('e.keyCode', e.keyCode)
@@ -230,6 +248,7 @@ export default {
       stopWatch,
       startStop,
       cancelWatch,
+      saveSet,
       ttt
     }
   }
