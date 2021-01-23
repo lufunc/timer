@@ -74,7 +74,7 @@
         </li>
       </ul>
       <footer style="position: relative;margin: -2px 20px 0px;">
-        <a href="http://baidu.com" target="_blank" style="color: #666;">1.0.0 @lufunc 2021</a>
+        <a href="https://github.com/lufunc/timer" target="_blank" style="color: #666;">1.0.0 @lufunc 2021</a>
         <span style="position: absolute;right: 0;color: #fff;">F11 - Full Screen</span>
       </footer>
     </setbox>
