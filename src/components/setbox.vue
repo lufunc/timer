@@ -5,14 +5,14 @@
         <div class="pic_set"></div>
       </div>
     </div>
-    <div class="set_item" ref="setDom" @mouseleave="hideSet" v-show="isShow">
+    <div class="set_item setLoad" ref="setDom" @mouseleave="hideSet" v-show="isShow">
       <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 export default {
   setup () {
     const isShow = ref(false)
@@ -22,14 +22,13 @@ export default {
         isShow.value = false
       }
     }
-    const ttt = () => {
-      console.log('ttt')
-    }
+    onMounted(()=>{
+      setDom.value.classList.remove('setLoad')
+    })
     return {
       isShow,
       setDom,
-      hideSet,
-      ttt
+      hideSet
     }
   }
 }
@@ -89,5 +88,9 @@ export default {
     border-left-color: transparent;
     transform: translateY(50%) rotateZ(45deg);
   }
+}
+.setLoad{
+  display: block !important;
+  visibility: hidden;
 }
 </style>

@@ -6,9 +6,67 @@
       <clock v-if="showSecond" :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_s" :msg="num_s" :bg="showBg"></clock>
     </div>
     <setbox class="set_box">
-      <div @click="ttt">ttt</div>
-      <button>777</button>
-      <button>666</button>
+      <ul class="set_box_inner">
+        <li>
+          <div class="setName">Hour Format:</div>
+          <ul class="pickItem">
+            <li @click="hourFormat=0" :class="{'pick-active':hourFormat===0}">12h</li>
+            <li @click="hourFormat=1" :class="{'pick-active':hourFormat===1}">24h</li>
+            <li @click="hourFormat=2" :class="{'pick-active':hourFormat===2}">024h</li>
+          </ul>
+        </li>
+        <li>
+          <div class="setName">Scale:</div>
+          <slider v-model="scale"></slider>
+          <div style="width:32px;padding-left: 8px;">{{scale}}</div>
+        </li>
+        <li>
+          <div class="setName">Brightn:</div>
+          <slider v-model="brightness"></slider>
+          <div style="width:32px;padding-left: 8px;">{{brightness}}</div>
+        </li>
+        <li>
+          <div class="setName">Show:</div>
+          <div>
+            <input type="checkbox" v-model="showBg" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
+            <span>Background</span>
+          </div>
+          <div>
+            <input type="checkbox" v-model="showSecond" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
+            <span>showSecond</span>
+          </div>
+        </li>
+        <li>
+          <div class="setName">Stopwatch:</div>
+          <button class="timerBtn startBtn">Start</button>
+        </li>
+        <li>
+          <div class="setName">Timer:</div>
+          <button class="timerBtn">
+            <span class="iconTime"></span>
+            <span style="vertical-align: middle;">5m</span>
+          </button>
+          <button class="timerBtn">
+            <span class="iconTime"></span>
+            <span style="vertical-align: middle;">10m</span>
+          </button>
+          <button class="timerBtn">
+            <span class="iconTomato"></span>
+            <span style="vertical-align: middle;">25m</span>
+          </button>
+        </li>
+        <li>
+          <div class="setName">自定义计时:</div>
+          <timePicker :numRange="24" v-model="my_h"></timePicker>
+          <timePicker :numRange="60" v-model="my_m"></timePicker>
+          <timePicker :numRange="60" v-model="my_s"></timePicker>
+          <button class="timerBtn" style="margin-left: 4px;">go</button>
+          <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span>
+        </li>
+      </ul>
+      <footer style="margin: -2px 20px 0px;">
+        <a href="http://baidu.com" style="color: #666;">1.0.0 @lufunc 2021</a>
+      </footer>
     </setbox>
   </div>
 </template>
@@ -17,8 +75,10 @@
 import { reactive, toRefs } from 'vue'
 import clock from './components/clock'
 import setbox from './components/setbox'
+import slider from './components/slider'
+import timePicker from './components/timePicker'
 export default {
-  components: { clock, setbox },
+  components: { clock, setbox,slider,timePicker },
   setup () {
     const data = reactive({
       // clock content
@@ -27,12 +87,15 @@ export default {
       num_s: '!',
       // setting
       hourFormat: 0, // 12h 24h 024h
-      scale: 1,
-      brightness: 1,
+      scale: 50,
+      brightness: 20,
       showBg: true,
       showSecond: true,
       timeMode: 0, // clock timer stopWatch
-      tempTime: 1611197322577
+      tempTime: 1611197322577,
+      my_h: 1,
+      my_m: 2,
+      my_s: 3
     })
     const zeroNum = (n) => {
       return n < 10 ? '0' + n : n
@@ -134,5 +197,87 @@ export default {
   position: fixed;
   bottom: 0;
   right: 0;
+}
+.set_box_inner{
+  padding: 20px;
+  padding-bottom: 0px;
+  color: #fff;
+  font-size: 18px;
+  &>li{
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+}
+.setName{
+  width: 116px;
+  margin-right: 12px;
+  text-align: right;
+}
+.pickItem{
+  display: flex;
+  text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  &>li{
+    box-sizing: border-box;
+    width: 60px;
+    height: 24px;
+    line-height: 22px;
+    border: 1px solid #666;
+    border-right: 0;
+    &:first-child{
+      border-top-left-radius: inherit;
+      border-bottom-left-radius: inherit;
+    }
+    &:last-child{
+      border-right: 1px solid #666;
+      border-top-right-radius: inherit;
+      border-bottom-right-radius: inherit;
+    }
+  }
+}
+.pick-active{
+  color: #333;
+  background-color: #fff;
+}
+.timerBtn{
+  box-sizing: border-box;
+  width: 60px;
+  height: 24px;
+  border-radius: 4px;
+  margin-right: 6px;
+  background-color: #fff;
+  color: #1c1c1c;
+  font-size: 16px;
+  // font-size: 18px;
+  cursor: pointer;
+  &:active{
+    background-color: #ddd;
+  }
+}
+.startBtn{
+  background-color: #666;
+  color: #fff;
+  &:active{
+    background-color: #555;
+  }
+}
+.iconTime{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  background-image: url(@timer);
+  background-size: contain;
+}
+.iconTomato{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-top: -3px;
+  vertical-align: middle;
+  background-image: url(@tomato);
+  background-size: contain;
 }
 </style>
