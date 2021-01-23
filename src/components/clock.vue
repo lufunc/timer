@@ -112,7 +112,7 @@ export default {
       ctx.fillStyle = gradient(ctx, '#bcbcbc', '#b8b8b8')
       ctx.fillText(s, 400, 0)
     }
-    const blackLine = (w = 20) => {
+    const blackLine = (w = 12) => {
       const ctx = data.ctx
       ctx.fillStyle = '#000000'
       ctx.fillRect(0, -w / 2, 800, w)
