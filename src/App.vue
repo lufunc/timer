@@ -4,6 +4,10 @@
       <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_h" :msg="num_h" :ampm="hourFormat===0" :bg="showBg"></clock>
       <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_m" :msg="num_m" :bg="showBg"></clock>
       <clock v-if="showSecond" :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_s" :msg="num_s" :bg="showBg"></clock>
+      <div class="watchBtn" @click="startStop" v-show="timeMode>0">
+        <div :style="{'color': watching?'red':'green'}">{{watching?'Stop':'Start'}}</div>
+        <div style="color: #666;">click or space</div>
+      </div>
     </div>
     <setbox class="set_box" ref="setRef">
       <ul class="set_box_inner">
@@ -38,7 +42,8 @@
         </li>
         <li>
           <div class="setName">Stopwatch:</div>
-          <button class="timerBtn startBtn">Start</button>
+          <button class="timerBtn startBtn" @click="stopWatch">开始</button>
+          <button class="timerBtn startBtn" @click="cancelWatch">取消</button>
         </li>
         <li>
           <div class="setName">Timer:</div>
@@ -54,7 +59,7 @@
             <span class="iconTomato"></span>
             <span style="vertical-align: middle;">25m</span>
           </button>
-          <button class="timerBtn" @click="cancelTimer">
+          <button class="timerBtn" @click="cancelTimer" style="margin-right: 0px;">
             <span class="iconCancel"></span>
             <span style="vertical-align: middle;">取消</span>
           </button>
@@ -64,8 +69,8 @@
           <timePicker :numRange="24" v-model="my_h"></timePicker>
           <timePicker :numRange="60" v-model="my_m"></timePicker>
           <timePicker :numRange="60" v-model="my_s"></timePicker>
-          <button class="timerBtn" @click="getTimer(0)" style="margin-left: 4px;">go</button>
-          <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span>
+          <button class="timerBtn" @click="getTimer(0)" style="margin-left: 4px;">开始</button>
+          <!-- <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span> -->
         </li>
       </ul>
       <footer style="margin: -2px 20px 0px;">
@@ -76,7 +81,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, watch } from 'vue'
 import clock from './components/clock'
 import setbox from './components/setbox'
 import slider from './components/slider'
@@ -97,13 +102,17 @@ export default {
       showBg: true,
       showSecond: true,
       timeMode: 0, // clock timer stopWatch
-      tempTime: 1611197322577,
-      my_h: 6,
+      timerTime: 0,
+      watchTime: 0,
+      stopTime: 0,
+      watching: true,
+      my_h: 1,
       my_m: 2,
       my_s: 3
     })
     const zeroNum = (n) => {
-      return n < 10 ? '0' + n : n
+      let str = n.toString()
+      return str[1] ? n : '0'+str
     }
     const formatNum = (n) => {
       if (data.hourFormat < 2) {
@@ -128,13 +137,13 @@ export default {
         t = 1000*60*n
       }
       let temp = new Date().getTime()
-      data.tempTime = temp+t
+      data.timerTime = temp+t
       data.timeMode = 1
       data.setRef.hideSet_f()
     }
     const _getTimer = () => {
       const temp = new Date().getTime()
-      let t = data.tempTime - temp
+      let t = data.timerTime - temp
       if (t < 0) return { h: 'ok', m: 'ok', s: 'ok' };
       t = parseInt(t / 1000)
       const h = parseInt(t / 3600)
@@ -144,16 +153,49 @@ export default {
     }
     const cancelTimer = () => {
       data.timeMode = 0
-      data.setRef.hideSet_f()
+      // data.setRef.hideSet_f()
     }
     const stopWatch = () => {
-      const temp = new Date().getTime()
-      let t = temp - data.tempTime
-      t = parseInt(t / 1000)
-      const h = parseInt(t / 3600)
-      const m = parseInt(t / 60) % 60
-      const s = t % 60
-      return { h, m, s }
+      document.onkeydown = (e)=>{
+        console.log('e.keyCode', e.keyCode)
+        if(e.keyCode === 32){
+          startStop()
+        }
+      }
+      data.watchTime = new Date().getTime()
+      data.watching = true
+      data.timeMode = 2
+      data.setRef.hideSet_f()
+    }
+    const _stopWatch = () => {
+      if(data.watching){
+        const temp = new Date().getTime()
+        let t = temp - data.watchTime
+        t = parseInt(t / 1000)
+        const h = parseInt(t / 3600)
+        const m = parseInt(t / 60) % 60
+        const s = t % 60
+        return { h, m, s }
+      }else{
+        return {
+          h:data.num_h,
+          m:data.num_m,
+          s:data.num_s
+        }
+      }
+    }
+    const cancelWatch = () => {
+      data.timeMode = 0
+    }
+    const startStop = () => {
+      if(data.watching){
+        data.watching = false
+        data.stopTime = new Date().getTime()
+      }else{
+        data.watching = true
+        let temp = new Date().getTime()
+        data.watchTime = data.watchTime + temp - data.stopTime
+      }
     }
     setInterval(() => {
       let res = {}
@@ -163,28 +205,28 @@ export default {
       } else if (m === 1) {
         res = _getTimer()
       } else if (m === 2) {
-        res = stopWatch()
+        res = _stopWatch()
       }
       data.num_h = formatNum(res.h)
       data.num_m = zeroNum(res.m)
       data.num_s = zeroNum(res.s)
     }, 200)
+    watch(()=>data.timeMode,(val,oldVal)=>{
+      console.log('data.timeMode', val,oldVal)
+      if(oldVal === 2){
+        document.onkeydown = null
+      }
+    })
     const ttt = () => {
       console.log('ttt')
-      // data.hourFormat++
-      // if(data.hourFormat>2) data.hourFormat=0
-      // let t = new Date().getTime()
-      // t = t + 1000*60*5
-      // data.tempTime = t
-      // data.timeMode = 1
-      // let t = new Date().getTime()
-      // data.tempTime = t
-      // data.timeMode = 2
     }
     return {
       ...toRefs(data),
       getTimer,
       cancelTimer,
+      stopWatch,
+      startStop,
+      cancelWatch,
       ttt
     }
   }
@@ -217,6 +259,34 @@ export default {
 .timer_hms{
   width: 30vw;
   height: 30vw;
+}
+.watchBtn{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-align: center;
+  opacity: 0;
+  transition: all 0.3s;
+  cursor: pointer;
+  &:hover{
+    opacity: 1;
+  }
+  &:active{
+    background-color: rgba(255, 255, 255, 0);
+  }
+  &>div{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  &>div:first-child{
+    font-size: 180px;
+    top: 46%;
+  }
+  &>div:last-child{
+    top: 90%;
+  }
 }
 .set_box{
   position: fixed;
