@@ -1,11 +1,11 @@
 <template>
   <div class="bg">
-    <div class="timer">
+    <div class="timer" :style="{'transform': 'translateY(-50%) scale('+(scale/100)+')','filter': 'brightness('+brightness/100+')'}">
       <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_h" :msg="num_h" :ampm="hourFormat===0" :bg="showBg"></clock>
       <clock :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_m" :msg="num_m" :bg="showBg"></clock>
       <clock v-if="showSecond" :class="[showSecond?'timer_hms':'timer_hm']" cid="clock_s" :msg="num_s" :bg="showBg"></clock>
     </div>
-    <setbox class="set_box">
+    <setbox class="set_box" ref="setRef">
       <ul class="set_box_inner">
         <li>
           <div class="setName">Hour Format:</div>
@@ -21,7 +21,7 @@
           <div style="width:32px;padding-left: 8px;">{{scale}}</div>
         </li>
         <li>
-          <div class="setName">Brightn:</div>
+          <div class="setName">Brightness:</div>
           <slider v-model="brightness"></slider>
           <div style="width:32px;padding-left: 8px;">{{brightness}}</div>
         </li>
@@ -33,7 +33,7 @@
           </div>
           <div>
             <input type="checkbox" v-model="showSecond" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
-            <span>showSecond</span>
+            <span>Second</span>
           </div>
         </li>
         <li>
@@ -42,17 +42,21 @@
         </li>
         <li>
           <div class="setName">Timer:</div>
-          <button class="timerBtn">
+          <button class="timerBtn" @click="getTimer(5)">
             <span class="iconTime"></span>
             <span style="vertical-align: middle;">5m</span>
           </button>
-          <button class="timerBtn">
+          <button class="timerBtn" @click="getTimer(10)">
             <span class="iconTime"></span>
             <span style="vertical-align: middle;">10m</span>
           </button>
-          <button class="timerBtn">
+          <button class="timerBtn" @click="getTimer(25)">
             <span class="iconTomato"></span>
             <span style="vertical-align: middle;">25m</span>
+          </button>
+          <button class="timerBtn" @click="cancelTimer">
+            <span class="iconCancel"></span>
+            <span style="vertical-align: middle;">取消</span>
           </button>
         </li>
         <li>
@@ -60,7 +64,7 @@
           <timePicker :numRange="24" v-model="my_h"></timePicker>
           <timePicker :numRange="60" v-model="my_m"></timePicker>
           <timePicker :numRange="60" v-model="my_s"></timePicker>
-          <button class="timerBtn" style="margin-left: 4px;">go</button>
+          <button class="timerBtn" @click="getTimer(0)" style="margin-left: 4px;">go</button>
           <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span>
         </li>
       </ul>
@@ -81,19 +85,20 @@ export default {
   components: { clock, setbox,slider,timePicker },
   setup () {
     const data = reactive({
+      setRef: null,
       // clock content
       num_h: '你',
       num_m: '好',
       num_s: '!',
       // setting
       hourFormat: 0, // 12h 24h 024h
-      scale: 50,
-      brightness: 20,
+      scale: 90,
+      brightness: 100,
       showBg: true,
       showSecond: true,
       timeMode: 0, // clock timer stopWatch
       tempTime: 1611197322577,
-      my_h: 1,
+      my_h: 6,
       my_m: 2,
       my_s: 3
     })
@@ -114,15 +119,32 @@ export default {
       const s = t.getSeconds()
       return { h, m, s }
     }
-    const getTimer = () => {
+    const getTimer = (n) => {
+      let t=0
+      if(n==0){
+        t = (data.my_h*3600+data.my_m*60+data.my_s)*1000
+        console.log('t', t)
+      } else {
+        t = 1000*60*n
+      }
+      let temp = new Date().getTime()
+      data.tempTime = temp+t
+      data.timeMode = 1
+      data.setRef.hideSet_f()
+    }
+    const _getTimer = () => {
       const temp = new Date().getTime()
       let t = data.tempTime - temp
-      if (t < 0) return { h: 0, m: 0, s: 0 }
+      if (t < 0) return { h: 'ok', m: 'ok', s: 'ok' };
       t = parseInt(t / 1000)
       const h = parseInt(t / 3600)
       const m = parseInt(t / 60) % 60
       const s = t % 60
       return { h, m, s }
+    }
+    const cancelTimer = () => {
+      data.timeMode = 0
+      data.setRef.hideSet_f()
     }
     const stopWatch = () => {
       const temp = new Date().getTime()
@@ -134,14 +156,14 @@ export default {
       return { h, m, s }
     }
     setInterval(() => {
-      let res = null
+      let res = {}
       const m = data.timeMode
-      if (m === 1) {
-        res = getTimer()
+      if(m===0){
+        res = getClock()
+      } else if (m === 1) {
+        res = _getTimer()
       } else if (m === 2) {
         res = stopWatch()
-      } else {
-        res = getClock()
       }
       data.num_h = formatNum(res.h)
       data.num_m = zeroNum(res.m)
@@ -161,6 +183,8 @@ export default {
     }
     return {
       ...toRefs(data),
+      getTimer,
+      cancelTimer,
       ttt
     }
   }
@@ -179,8 +203,9 @@ export default {
   background-color: #000;
 }
 .timer{
-  position: relative;
+  position: absolute;
   top: 50%;
+  width: 100%;
   transform: translateY(-50%);
   display: flex;
   justify-content: space-evenly;
@@ -263,21 +288,21 @@ export default {
     background-color: #555;
   }
 }
-.iconTime{
+.iconTime,.iconTomato,.iconCancel{
   display: inline-block;
   width: 20px;
   height: 20px;
   vertical-align: middle;
-  background-image: url(@timer);
   background-size: contain;
 }
+.iconTime{
+  background-image: url(@timer);
+}
 .iconTomato{
-  display: inline-block;
-  width: 20px;
-  height: 20px;
   margin-top: -3px;
-  vertical-align: middle;
   background-image: url(@tomato);
-  background-size: contain;
+}
+.iconCancel{
+  background-image: url(@cancel);
 }
 </style>

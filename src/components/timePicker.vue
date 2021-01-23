@@ -1,7 +1,7 @@
 <template>
   <div class="time-panel-box">
     <div class="time-panel">
-      <div class="scroll-box" ref="sb" @scroll="comfirmNum">
+      <div class="scroll-box" ref="sb">
         <ul class="panel-item">
           <li v-for="(item,index) in temp" :key="index">{{item}}</li>
         </ul>
@@ -70,7 +70,9 @@ export default {
     })
     onMounted(()=>{
       data.sb.scrollTop = props.modelValue*24
-      console.log(data.sb.scrollHeight,data.sb.scrollTop)
+      setTimeout(() => {
+        data.sb.addEventListener('scroll',comfirmNum)
+      }, 0);
     })
     return {
       ...toRefs(data),
