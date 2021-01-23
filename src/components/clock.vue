@@ -182,7 +182,7 @@ export default {
     // }
     watch([() => props.msg, () => props.ampm],
       () => {
-        console.log('watch', props.msg, props.ampm)
+        // console.log('watch', props.msg, props.ampm)
         drawFlip()
       })
     watch(() => props.bg, () => { drawFlip() })

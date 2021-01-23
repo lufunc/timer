@@ -31,13 +31,13 @@
         </li>
         <li>
           <div class="setName">Show:</div>
-          <div>
+          <div @click="showBg=!showBg">
             <input type="checkbox" v-model="showBg" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
-            <span>Background</span>
+            <span style="margin-right: 12px;cursor: pointer;">Background</span>
           </div>
-          <div>
+          <div @click="showSecond=!showSecond">
             <input type="checkbox" v-model="showSecond" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
-            <span>Second</span>
+            <span style="cursor: pointer;">Second</span>
           </div>
         </li>
         <li>
@@ -74,14 +74,14 @@
         </li>
       </ul>
       <footer style="margin: -2px 20px 0px;">
-        <a href="http://baidu.com" style="color: #666;">1.0.0 @lufunc 2021</a>
+        <a href="http://baidu.com" target="_blank" style="color: #666;">1.0.0 @lufunc 2021</a>
       </footer>
     </setbox>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs, watch } from 'vue'
+import { reactive, toRefs, watch, onMounted } from 'vue'
 import clock from './components/clock'
 import setbox from './components/setbox'
 import slider from './components/slider'
@@ -108,7 +108,8 @@ export default {
       watching: true,
       my_h: 1,
       my_m: 2,
-      my_s: 3
+      my_s: 3,
+      setShow: null
     })
     const zeroNum = (n) => {
       let str = n.toString()
@@ -129,6 +130,7 @@ export default {
       return { h, m, s }
     }
     const getTimer = (n) => {
+      data.watching = true
       let t=0
       if(n==0){
         t = (data.my_h*3600+data.my_m*60+data.my_s)*1000
@@ -137,31 +139,33 @@ export default {
         t = 1000*60*n
       }
       let temp = new Date().getTime()
-      data.timerTime = temp+t
+      data.watchTime = temp+t
       data.timeMode = 1
       data.setRef.hideSet_f()
     }
     const _getTimer = () => {
-      const temp = new Date().getTime()
-      let t = data.timerTime - temp
-      if (t < 0) return { h: 'ok', m: 'ok', s: 'ok' };
-      t = parseInt(t / 1000)
-      const h = parseInt(t / 3600)
-      const m = parseInt(t / 60) % 60
-      const s = t % 60
-      return { h, m, s }
+      if(data.watching){
+        const temp = new Date().getTime()
+        let t = data.watchTime - temp
+        if (t < 0) return { h: 'ok', m: 'ok', s: 'ok' };
+        t = parseInt(t / 1000)
+        const h = parseInt(t / 3600)
+        const m = parseInt(t / 60) % 60
+        const s = t % 60
+        return { h, m, s }
+      }else{
+        return {
+          h:data.num_h,
+          m:data.num_m,
+          s:data.num_s
+        }
+      }
     }
     const cancelTimer = () => {
       data.timeMode = 0
-      // data.setRef.hideSet_f()
+      data.setRef.hideSet_f()
     }
     const stopWatch = () => {
-      document.onkeydown = (e)=>{
-        console.log('e.keyCode', e.keyCode)
-        if(e.keyCode === 32){
-          startStop()
-        }
-      }
       data.watchTime = new Date().getTime()
       data.watching = true
       data.timeMode = 2
@@ -186,8 +190,15 @@ export default {
     }
     const cancelWatch = () => {
       data.timeMode = 0
+      data.setRef.hideSet_f()
     }
     const startStop = () => {
+      let t = document.getElementsByClassName('pic_set')[0]
+      t.style.opacity = 1
+      if(data.setShow) clearTimeout(data.setShow);
+      data.setShow = setTimeout(() => {
+        t.style.opacity = ''
+      }, 400);
       if(data.watching){
         data.watching = false
         data.stopTime = new Date().getTime()
@@ -211,10 +222,12 @@ export default {
       data.num_m = zeroNum(res.m)
       data.num_s = zeroNum(res.s)
     }, 200)
-    watch(()=>data.timeMode,(val,oldVal)=>{
-      console.log('data.timeMode', val,oldVal)
-      if(oldVal === 2){
-        document.onkeydown = null
+    onMounted(()=>{
+      document.onkeydown = (e)=>{
+        // console.log('e.keyCode', e.keyCode)
+        if(e.keyCode === 32 || e.keyCode===13){
+          startStop()
+        }
       }
     })
     const ttt = () => {
