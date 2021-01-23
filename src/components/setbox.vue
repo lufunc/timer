@@ -5,10 +5,8 @@
         <div class="pic_set"></div>
       </div>
     </div>
-    <div class="set_item" v-show="isShow">
-      <div class="set_inner" ref="setDom" @mouseleave="hideSet">
-        <slot></slot>
-      </div>
+    <div class="set_item" ref="setDom" @mouseleave="hideSet" v-show="isShow">
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -74,12 +72,7 @@ export default {
   left: -256px;
   width: 432px;
   height: 312px;
-}
-.set_inner{
-  position: relative;
   box-sizing: border-box;
-  width: 100%;
-  height: 100%;
   background-color: #262729;
   border-radius: 20px;
   border: 1px solid #666;
