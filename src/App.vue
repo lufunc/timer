@@ -31,13 +31,13 @@
         </li>
         <li>
           <div class="setName">Show:</div>
-          <div @click="showBg=!showBg">
-            <input type="checkbox" v-model="showBg" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
-            <span style="margin-right: 12px;cursor: pointer;">Background</span>
+          <div @click="showBg=!showBg" style="margin-right: 12px;cursor: pointer;">
+            <input type="checkbox" v-model="showBg" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;cursor: pointer;">
+            <span>Background</span>
           </div>
-          <div @click="showSecond=!showSecond">
-            <input type="checkbox" v-model="showSecond" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;">
-            <span style="cursor: pointer;">Second</span>
+          <div @click="showSecond=!showSecond" style="cursor: pointer;">
+            <input type="checkbox" v-model="showSecond" style="margin: 0;vertical-align: middle;width: 18px;height: 18px;cursor: pointer;">
+            <span>Second</span>
           </div>
         </li>
         <li>
@@ -73,8 +73,9 @@
           <!-- <span style="font-size: 8px;">{{my_h+' '+my_m+' '+my_s}}</span> -->
         </li>
       </ul>
-      <footer style="margin: -2px 20px 0px;">
+      <footer style="position: relative;margin: -2px 20px 0px;">
         <a href="http://baidu.com" target="_blank" style="color: #666;">1.0.0 @lufunc 2021</a>
+        <span style="position: absolute;right: 0;color: #fff;">F11 - Full Screen</span>
       </footer>
     </setbox>
   </div>
@@ -103,8 +104,7 @@ export default {
       showBg: true,
       showSecond: true,
       timeMode: 0, // clock timer stopWatch
-      timerTime: 0,
-      watchTime: 0,
+      tempTime: 0,
       stopTime: 0,
       watching: true,
       my_h: 1,
@@ -129,14 +129,14 @@ export default {
         t = 1000 * 60 * n
       }
       const temp = new Date().getTime()
-      data.watchTime = temp + t
+      data.tempTime = temp + t
       data.timeMode = 1
       data.setRef.hidesetF()
     }
     const _getTimer = () => {
       if (data.watching) {
         const temp = new Date().getTime()
-        let t = data.watchTime - temp
+        let t = data.tempTime - temp
         if (t <= 0) return { h: 'ok', m: 'ok', s: 'ok' }
         t = parseInt(t / 1000)
         const h = parseInt(t / 3600)
@@ -156,7 +156,7 @@ export default {
       data.setRef.hidesetF()
     }
     const stopWatch = () => {
-      data.watchTime = new Date().getTime()
+      data.tempTime = new Date().getTime()
       data.watching = true
       data.timeMode = 2
       data.setRef.hidesetF()
@@ -164,7 +164,7 @@ export default {
     const _stopWatch = () => {
       if (data.watching) {
         const temp = new Date().getTime()
-        let t = temp - data.watchTime
+        let t = temp - data.tempTime
         t = parseInt(t / 1000)
         const h = parseInt(t / 3600)
         const m = parseInt(t / 60) % 60
@@ -185,7 +185,7 @@ export default {
     const startStop = () => {
       const t = document.getElementsByClassName('pic_set')[0]
       t.style.opacity = 1
-      if (data.setShow) clearTimeout(data.setShow)
+      if (data.setShow) clearTimeout(data.setShow);
       data.setShow = setTimeout(() => {
         t.style.opacity = ''
       }, 400)
@@ -195,7 +195,7 @@ export default {
       } else {
         data.watching = true
         const temp = new Date().getTime()
-        data.watchTime = data.watchTime + temp - data.stopTime
+        data.tempTime = data.tempTime + temp - data.stopTime
       }
     }
     setInterval(() => {
