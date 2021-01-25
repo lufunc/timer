@@ -34,13 +34,12 @@ export default {
       const res = {}
       res.ap = ''
       res.num = props.msg
-      if (props.ampm) {
-        const num = parseInt(props.msg)
-        if (num < 13) {
+      if (props.ampm && typeof (props.msg) === 'number') {
+        if (props.msg < 13) {
           res.ap = 'AM'
-        } else if (num < 24) {
+        } else if (props.msg < 24) {
           res.ap = 'PM'
-          res.num = num - 12
+          res.num -= 12
         }
       }
       return res
