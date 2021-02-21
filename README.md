@@ -4,6 +4,10 @@ flip clock
 
 翻页时钟
 
+## demo
+
+[clock](https://lufunc.github.io/timer/)
+
 ## Project setup
 ```
 npm install
